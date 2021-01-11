@@ -1,0 +1,17 @@
+existingSecret: redis-secret
+existingSecretPasswordKey: redis-password
+
+cluster:
+  slaveCount: 1
+
+networkPolicy:
+  enabled: false
+  allowExternal: true
+
+master:
+  persistence:
+    enabled: false
+
+slave:
+  persistence:
+    enabbled: false

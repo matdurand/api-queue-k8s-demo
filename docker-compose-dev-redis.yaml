@@ -1,0 +1,10 @@
+version: '3'
+services:
+  redis-queue:
+    image: redis:alpine3.12
+    ports:
+      - "6379:6379"
+    networks:
+      - sub-etha
+networks:
+  sub-etha:

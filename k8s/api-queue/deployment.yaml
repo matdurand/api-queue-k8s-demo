@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-queue-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-queue-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: api-queue-backend
+    spec:
+      containers:
+      - image: matdurand/api-queue-k8s-demo:1.0.0
+        name: api-queue-backend
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+        env:
+        - name: REDIS_HOST 
+          valueFrom:
+            configMapKeyRef:
+                name: api-queue-configmap
+                key: redis-host
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+                name: api-queue-configmap
+                key: redis-port
+
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+                name: redis-secret
+                key: redis-password

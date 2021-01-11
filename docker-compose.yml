@@ -1,0 +1,21 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: "matdurand/api-queue-k8s-demo:1.0.0"
+    networks:
+      - sub-etha
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis-queue
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+  redis-queue:
+    image: redis:alpine3.12
+    networks:
+      - sub-etha
+networks:
+  sub-etha:
